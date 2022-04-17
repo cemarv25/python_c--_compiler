@@ -2,14 +2,18 @@ from io import TextIOWrapper
 from data_structures.symbol_table import SymbolTable
 from .utils import transition_table, advance, acceptor, error, reserved_words, gen_char_dict
 
-def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: TextIOWrapper):
+def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: TextIOWrapper) -> list | str:
     """Recognize the tokens for the input file.
 
     Args:
         ids_table (SymbolTable): Symbol table to store identifiers in.
         nums_table (SymbolTable): Symbol table to store numbers in.
         file (TextIOWrapper): The file to read from.
+
+    Returns:
+        list | str: The sequence of tokens in a list if no error found. An error message instead.
     """
+
     curr_state = 0
     curr_char = file.read(1)
     char_to_idx = gen_char_dict()

@@ -1,6 +1,5 @@
 from .entry import Entry
 from .id_generator import IdGenerator
-from typing import Optional
 
 class SymbolTable:
     """Class used to store token entries with the token's information.
@@ -46,14 +45,14 @@ class SymbolTable:
         
         return False
 
-    def get_entry_with_token(self, token: str) -> Optional[tuple]:
+    def get_entry_with_token(self, token: str) -> tuple | None:
         """Gen an entry with the token if exists. Otherwise return None.
 
         Args:
             token (str): The token to search for
 
         Returns:
-            Optional[tuple]: The tuple (entry_id, entry) if found, None if not found.
+            tuple | None: The tuple (entry_id, entry) if found, None if not found.
         """
 
         for entry_id, entry in self.entries:
