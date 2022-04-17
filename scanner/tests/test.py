@@ -16,13 +16,17 @@ class TestScanner(unittest.TestCase):
             (20, 6), 9, (20, 5), 25, (20, 3), 9, 6, 14, (20, 5), 21, (20, 4), 12, (21, 3), 15, 18, 3, (20, 8), 9, (20, 6), 25,
             (20, 9), 14, (20, 2), 10, (20, 10), 10, (20, 4), 15, 9, (20, 8), 25, (20, 2), 16, (20, 6), 17, 9, (20, 2), 16,
             (20, 6), 17, 25, (20, 2), 16, (20, 5), 17, 9, (20, 2), 16, (20, 5), 17, 25, (20, 8), 9, (20, 5), 25, (20, 5), 11,
-            (21, 4), 9, 19, 19
+            (21, 4), 9, 19, 19, 5, (20, 11), 14, 5, 15, 18, 3, (20, 5), 9, (20, 5), 25, (21, 5), 9, 6, 14, (20, 5), 21, (21, 6),
+            15, 18, 7, (20, 0), 16, (20, 5), 17, 9, (20, 5), 25, (20, 5), 11, (21, 7), 9, 19, (20, 7), 14, (20, 0), 10, (21, 8),
+            10, (21, 9), 15, 9, (20, 5), 25, (21, 10), 9, 6, 14, (20, 5), 21, (21, 11), 15, 18, 8, (20, 0), 16, (20, 5), 17, 9,
+            (20, 5), 25, (20, 5), 11, (21, 12), 9, 19, 19
         ]
         id_sym_table = SymbolTable("ids")
         num_sym_table = SymbolTable("nums")
         f = open('scanner/test1.txt', 'r')
-        self.assertListEqual(main.recognize_tokens(id_sym_table, num_sym_table, f), expected_token_seq_1)
+        token_seq = main.recognize_tokens(id_sym_table, num_sym_table, f)
         f.close()
+        self.assertListEqual(token_seq, expected_token_seq_1)
 
 if __name__ == '__main__':
     unittest.main()
