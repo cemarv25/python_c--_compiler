@@ -77,10 +77,3 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
     # special symbols
     elif state in range(12, 31):
         token_seq.append(state - 3)
-
-if __name__ == '__main__':
-    ids_table = SymbolTable('identifiers')
-    nums_table = SymbolTable('numbers')
-    f = open('scanner/test1.txt', 'r')
-    recognize_tokens(ids_table, nums_table, f)
-    f.close()
