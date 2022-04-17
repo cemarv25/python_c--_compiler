@@ -50,13 +50,16 @@ error = [
     True, True, True, True, True, True
 ]
 
-def gen_char_dict():
+def gen_char_dict() -> dict:
     """Create a dictionary with all the input characters.
-    
+
     This works with dictionary comprehension, which is a short way of 
     creating a dictionary using a loop.
+
+    Returns:
+        dict: The dictionary with every char's respective index to the transition table
     """
-    
+
     # Letter dictionaries
     lowercase_dict = {chr(ord('a') + i) : 0 for i in range(26)}
     uppercase_dict = {chr(ord('A') + i) : 0 for i in range(26)}
@@ -90,5 +93,5 @@ def gen_char_dict():
         '\n': 18,
     }
 
-    # Join both dictionaries with the union operator (|)
+    # Join all dictionaries with the union operator (|)
     return lowercase_dict | uppercase_dict | digit_dict | special_symbols | white_space

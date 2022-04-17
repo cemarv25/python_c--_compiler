@@ -1,10 +1,12 @@
 class Entry:
-    """Class used to represent the Entries of the Symbol Table"""
+    """Class used to represent the Entries of the Symbol Table.
+    """
 
     def __init__(self, content: str) -> None:
-        """
-        :param content: The content of the Entry
-        :type content: str
+        """The Entry's constructor.
+
+        Args:
+            content (str): The Entry's content
         """
 
         self.content = content

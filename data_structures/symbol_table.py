@@ -2,12 +2,14 @@ from entry import Entry
 from id_generator import IdGenerator
 
 class SymbolTable:
-    """Class used to store token entries with the token's information."""
+    """Class used to store token entries with the token's information.
+    """
 
     def __init__(self, name: str) -> None:
-        """
-        :param name: The name of the symbol table.
-        :type name: str
+        """SymbolTable constructor
+
+        Args:
+            name (str): The name for the table
         """
 
         self.name = name
@@ -16,9 +18,9 @@ class SymbolTable:
 
     def insert_entry(self, entry: Entry):
         """Inserts an entry to the entry list of the table.
-        
-        :param entry: The entry to be inserted
-        :type entry: Entry
+
+        Args:
+            entry (Entry): The entry to be inserted
         """
 
         entry_id = self.id_gen.next()
@@ -26,9 +28,9 @@ class SymbolTable:
 
     def initialize_id_gen(self) -> IdGenerator:
         """Initializes the Symbol Table's id generator.
-        
-        :returns: An id generator
-        :rtype: IdGenerator
+
+        Returns:
+            IdGenerator: An instance of the class IdGenerator
         """
 
         return IdGenerator()
