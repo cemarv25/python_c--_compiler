@@ -12,16 +12,16 @@ transition_table = [
 ]
 
 advance = [
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ],
-    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True ]
+    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, False ],
+    [ True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False ],
+    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, False ],
+    [ True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, False ]
 ]
 
 acceptor = [
@@ -49,6 +49,8 @@ error = [
     # From state 32 - 37: error
     True, True, True, True, True, True
 ]
+
+reserved_words = ['else', 'if', 'int', 'return', 'void', 'while', 'input', 'output']
 
 def gen_char_dict() -> dict:
     """Create a dictionary with all the input characters.
