@@ -7,5 +7,6 @@ if __name__ == '__main__':
 
     f = open('scanner/test1.txt', 'r')
     token_sequence = recognize_tokens(ids_table, nums_table, f)
+    print(token_sequence)
     f.close()
     del f
