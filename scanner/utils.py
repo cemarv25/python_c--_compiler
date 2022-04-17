@@ -56,7 +56,7 @@ error_messages = [
     'UnexpectedChar: Unexpected "!" encountered.',
     'BadCompoundSymbol: Compound symbol badly constructed.',
     'UnexpectedChar: A character that does not belong to the language\'s alphabet was encountered.',
-    'NonClosingComment: The EOF was reached with a non-closing comment. '
+    'NonClosingComment: The EOF was reached with a non-closing comment.'
 ]
 
 reserved_words = ['else', 'if', 'int', 'return', 'void', 'while', 'input', 'output']

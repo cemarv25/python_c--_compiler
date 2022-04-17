@@ -3,6 +3,10 @@ import unittest
 import main
 
 class TestScanner(unittest.TestCase):
+    def setUp(self):
+        self.id_sym_table = SymbolTable('ids')
+        self.num_sym_table = SymbolTable('nums')
+
     def test_recognize_tokens(self):
         """Test that the scanner outputs the correct token sequence.
         """
@@ -21,12 +25,70 @@ class TestScanner(unittest.TestCase):
             10, (21, 9), 15, 9, (20, 5), 25, (21, 10), 9, 6, 14, (20, 5), 21, (21, 11), 15, 18, 8, (20, 0), 16, (20, 5), 17, 9,
             (20, 5), 25, (20, 5), 11, (21, 12), 9, 19, 19
         ]
-        id_sym_table = SymbolTable("ids")
-        num_sym_table = SymbolTable("nums")
         f = open('scanner/test1.txt', 'r')
-        token_seq = main.recognize_tokens(id_sym_table, num_sym_table, f)
+        token_seq = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
         f.close()
-        self.assertListEqual(token_seq, expected_token_seq_1)
+        self.assertListEqual(token_seq, expected_token_seq_1, "The token sequence does not equal the expected.")
+
+    def test_outputs_bad_pseudotoken_msg(self):
+        """Test that the scanner detects a bad pseudotoken and outputs the correct message.
+        """
+
+        expected_output = 'BadPseudoToken: Identifier or reserved word badly constructed.\n\tAt scanner/tests/text_files/test_bad_pseudotoken.txt:1'
+        f = open('scanner/tests/text_files/test_bad_pseudotoken.txt', 'r')
+        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        f.close()
+        self.assertEqual(output, expected_output)
+
+    def test_outputs_bad_number_msg(self):
+        """Test that the scanner detects a bad number and outputs the correct message.
+        """
+
+        expected_output = 'BadNumber: Number literal badly constructed.\n\tAt scanner/tests/text_files/test_bad_number.txt:1'
+        f = open('scanner/tests/text_files/test_bad_number.txt', 'r')
+        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        f.close()
+        self.assertEqual(output, expected_output)
+
+    def test_outputs_bad_exclamation_msg(self):
+        """Test that the scanner detects a bad number and outputs the correct message.
+        """
+
+        expected_output = 'UnexpectedChar: Unexpected "!" encountered.\n\tAt scanner/tests/text_files/test_bad_!.txt:1'
+        f = open('scanner/tests/text_files/test_bad_!.txt', 'r')
+        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        f.close()
+        self.assertEqual(output, expected_output)
+
+    def test_outputs_bad_compound_sym_msg(self):
+        """Test that the scanner detects a bad compound symbol and outputs the correct message.
+        """
+
+        expected_output = 'BadCompoundSymbol: Compound symbol badly constructed.\n\tAt scanner/tests/text_files/test_bad_compound_sym.txt:1'
+        f = open('scanner/tests/text_files/test_bad_compound_sym.txt', 'r')
+        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        f.close()
+        self.assertEqual(output, expected_output)
+
+    def test_outputs_rare_sym_msg(self):
+        """Test that the scanner detects a rare symbol and outputs the correct message.
+        """
+
+        expected_output = 'UnexpectedChar: A character that does not belong to the language\'s alphabet was encountered.\n\tAt scanner/tests/text_files/test_rare_sym.txt:1'
+        f = open('scanner/tests/text_files/test_rare_sym.txt', 'r')
+        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        f.close()
+        self.assertEqual(output, expected_output)
+
+    def test_outputs_non_closing_comment_msg(self):
+        """Test that the scanner detects a non-closing comment and outputs the correct message.
+        """
+
+        expected_output = 'NonClosingComment: The EOF was reached with a non-closing comment.\n\tAt scanner/tests/text_files/test_non_closing_comment.txt:2'
+        f = open('scanner/tests/text_files/test_non_closing_comment.txt', 'r')
+        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        f.close()
+        self.assertEqual(output, expected_output)
 
 if __name__ == '__main__':
     unittest.main()

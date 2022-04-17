@@ -18,7 +18,7 @@ def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: Text
     curr_char = file.read(1)
     char_to_idx = gen_char_dict()
     token = ''
-    char_line = 1
+    curr_line = 1
     comment_line = 0
 
     token_seq = []
@@ -28,7 +28,7 @@ def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: Text
         while not acceptor[curr_state] and not error[curr_state] and curr_char != '':
             char_idx = get_char_idx(curr_char, char_to_idx)
 
-            comment_line = update_comment_line(comment_line, char_line, curr_char, curr_state)
+            comment_line = update_comment_line(comment_line, curr_line, curr_char, curr_state)
             new_state = transition_table[curr_state][char_idx]
             
             if advance[curr_state][char_idx]:
@@ -38,7 +38,7 @@ def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: Text
                 
                 # add one to the line count if curr_char is a newline
                 if curr_char == '\n':
-                    char_line += 1
+                    curr_line += 1
 
                 curr_char = file.read(1)
             curr_state = new_state
@@ -49,7 +49,7 @@ def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: Text
             curr_state = 0
         elif error[curr_state]:
             # send error message
-            return f"{error_messages[curr_state - 32]}\n\tAt {file.name}:{char_line}"
+            return f"{error_messages[curr_state - 32]}\n\tAt {file.name}:{curr_line}"
 
     # check if there is a non-closing comment
     if curr_state == 8 or curr_state == 9:
@@ -58,6 +58,16 @@ def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: Text
     return token_seq
 
 def get_char_idx(char: str, idx_dict: dict) -> int:
+    """Get the corresponding index for a specific character to access the transition table.
+
+    Args:
+        char (str): The char to get the index for
+        idx_dict (dict): The dictionary where every index for every char is stored
+
+    Returns:
+        int: The index that corresponds to the character
+    """
+
     # if curr_char is not in the array, means it is a rare symbol
     if char in idx_dict:
         return idx_dict[char]
@@ -65,6 +75,20 @@ def get_char_idx(char: str, idx_dict: dict) -> int:
     return 19
 
 def update_comment_line(comment_line: int, char_line: int, char: str, state: int) -> int:
+    """Updates the line where a comment started. If there isn't a comment, it is left unmodified.
+
+    The logic is, if the current character is '*' and the current state is 7, means that a comment is starting.
+
+    Args:
+        comment_line (int): The variable where the comment line is stored
+        char_line (int): The current line where the character is
+        char (str): The current char
+        state (int): The current state
+
+    Returns:
+        int: The current line
+    """
+
     # if curr_char is '*' and curr_state is 7, means a comment is starting so save the line
     if char == '*' and state == 7:
         return char_line

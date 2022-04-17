@@ -1,0 +1,4 @@
+int x;
+/* non-closing comment
+
+while x[]
