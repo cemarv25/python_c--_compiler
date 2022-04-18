@@ -70,3 +70,12 @@ class SymbolTable:
         """
 
         return IdGenerator()
+
+    def get_entries(self) -> list:
+        """Return the entries in the format (entry#, entry.content).
+
+        Returns:
+            list: The list of tuples of the entries
+        """
+
+        return [(entry_id, entry.content) for entry_id, entry in self.entries]

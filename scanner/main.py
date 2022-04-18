@@ -1,19 +1,20 @@
 from io import TextIOWrapper
+from typing import Tuple
 from data_structures.symbol_table import SymbolTable
 from .utils import transition_table, advance, acceptor, error, error_messages, reserved_words, gen_char_dict
 
-def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: TextIOWrapper) -> list | str:
-    """Recognize the tokens for the input file.
+def recognize_tokens(file: TextIOWrapper) -> Tuple[list, SymbolTable, SymbolTable] | str:
+    """Recognize the tokens from the provided file.
 
     Args:
-        ids_table (SymbolTable): Symbol table to store identifiers in.
-        nums_table (SymbolTable): Symbol table to store numbers in.
-        file (TextIOWrapper): The file to read from.
+        file (TextIOWrapper): The file to read from
 
     Returns:
-        list | str: The sequence of tokens in a list if no error found. An error message instead.
+        Tuple[list, SymbolTable, SymbolTable] | str: A tuple containing the token sequence as a list, the identifiers SymbolTable and the numbers SymbolTable
     """
 
+    ids_table = SymbolTable('identifiers')
+    nums_table = SymbolTable('numbers')
     curr_state = 0
     curr_char = file.read(1)
     char_to_idx = gen_char_dict()
@@ -55,7 +56,7 @@ def recognize_tokens(ids_table: SymbolTable, nums_table: SymbolTable, file: Text
     if curr_state == 8 or curr_state == 9:
         return f"{error_messages[5]}\n\tAt {file.name}:{comment_line}"
 
-    return token_seq
+    return token_seq, ids_table, nums_table
 
 def get_char_idx(char: str, idx_dict: dict) -> int:
     """Get the corresponding index for a specific character to access the transition table.
@@ -121,14 +122,20 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
 
             if not entry:
                 token_id = ids_table.insert_entry(token)
-                token_seq.append((20, token_id))
+                token_seq.append((30, token_id))
             else:
-                token_seq.append((20, entry[0]))
+                token_seq.append((30, entry[0]))
     
     # numbers
+    # Check if the number is already in the symbol table
     elif state == 11:
-        token_id = nums_table.insert_entry(token)
-        token_seq.append((21, token_id))
+        entry = nums_table.get_entry_with_token(token)
+
+        if not entry:
+            token_id = nums_table.insert_entry(token)
+            token_seq.append((31, token_id))
+        else:
+            token_seq.append((31, entry[0]))
 
     # special symbols
     elif state in range(12, 31):

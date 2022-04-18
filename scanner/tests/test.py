@@ -3,32 +3,35 @@ import unittest
 import main
 
 class TestScanner(unittest.TestCase):
-    def setUp(self):
-        self.id_sym_table = SymbolTable('ids')
-        self.num_sym_table = SymbolTable('nums')
-
     def test_recognize_tokens(self):
         """Test that the scanner outputs the correct token sequence.
         """
 
         expected_token_seq_1 = [
-            3, (20, 0), 16, (21, 0), 17, 9, 3, (20, 1), 14, 3, (20, 2), 16, 17, 10, 3, (20, 3), 10, 3, (20, 4), 15, 18, 3,
-            (20, 5), 9, 3, (20, 0), 9, 3, (20, 6), 9, (20, 6), 25, (20, 3), 9, (20, 0), 25, (20, 2), 16, (20, 3), 17, 9, (20, 5),
-            25, (20, 3), 11, (21, 1), 9, 6, 14, (20, 5), 21, (20, 4), 15, 18, 2, 14, (20, 2), 16, (20, 5), 17, 21, (20, 0), 15,
-            18, (20, 0), 25, (20, 2), 16, (20, 5), 17, 9, (20, 6), 25, (20, 5), 9, 19, (20, 5), 25, (20, 5), 11, (21, 2), 9, 19,
-            4, (20, 6), 9, 19, 5, (20, 7), 14, 3, (20, 2), 16, 17, 10, 3, (20, 3), 10, 3, (20, 4), 15, 18, 3, (20, 5), 9, 3,
-            (20, 6), 9, (20, 5), 25, (20, 3), 9, 6, 14, (20, 5), 21, (20, 4), 12, (21, 3), 15, 18, 3, (20, 8), 9, (20, 6), 25,
-            (20, 9), 14, (20, 2), 10, (20, 10), 10, (20, 4), 15, 9, (20, 8), 25, (20, 2), 16, (20, 6), 17, 9, (20, 2), 16,
-            (20, 6), 17, 25, (20, 2), 16, (20, 5), 17, 9, (20, 2), 16, (20, 5), 17, 25, (20, 8), 9, (20, 5), 25, (20, 5), 11,
-            (21, 4), 9, 19, 19, 5, (20, 11), 14, 5, 15, 18, 3, (20, 5), 9, (20, 5), 25, (21, 5), 9, 6, 14, (20, 5), 21, (21, 6),
-            15, 18, 7, (20, 0), 16, (20, 5), 17, 9, (20, 5), 25, (20, 5), 11, (21, 7), 9, 19, (20, 7), 14, (20, 0), 10, (21, 8),
-            10, (21, 9), 15, 9, (20, 5), 25, (21, 10), 9, 6, 14, (20, 5), 21, (21, 11), 15, 18, 8, (20, 0), 16, (20, 5), 17, 9,
-            (20, 5), 25, (20, 5), 11, (21, 12), 9, 19, 19
+            3, (30, 0), 16, (31, 0), 17, 9, 3, (30, 1), 14, 3, (30, 2), 16, 17, 10, 3, (30, 3), 10, 3, (30, 4), 15, 18, 3,
+            (30, 5), 9, 3, (30, 0), 9, 3, (30, 6), 9, (30, 6), 25, (30, 3), 9, (30, 0), 25, (30, 2), 16, (30, 3), 17, 9, (30, 5),
+            25, (30, 3), 11, (31, 1), 9, 6, 14, (30, 5), 21, (30, 4), 15, 18, 2, 14, (30, 2), 16, (30, 5), 17, 21, (30, 0), 15,
+            18, (30, 0), 25, (30, 2), 16, (30, 5), 17, 9, (30, 6), 25, (30, 5), 9, 19, (30, 5), 25, (30, 5), 11, (31, 1), 9, 19,
+            4, (30, 6), 9, 19, 5, (30, 7), 14, 3, (30, 2), 16, 17, 10, 3, (30, 3), 10, 3, (30, 4), 15, 18, 3, (30, 5), 9, 3,
+            (30, 6), 9, (30, 5), 25, (30, 3), 9, 6, 14, (30, 5), 21, (30, 4), 12, (31, 1), 15, 18, 3, (30, 8), 9, (30, 6), 25,
+            (30, 9), 14, (30, 2), 10, (30, 10), 10, (30, 4), 15, 9, (30, 8), 25, (30, 2), 16, (30, 6), 17, 9, (30, 2), 16,
+            (30, 6), 17, 25, (30, 2), 16, (30, 5), 17, 9, (30, 2), 16, (30, 5), 17, 25, (30, 8), 9, (30, 5), 25, (30, 5), 11,
+            (31, 1), 9, 19, 19, 5, (30, 11), 14, 5, 15, 18, 3, (30, 5), 9, (30, 5), 25, (31, 2), 9, 6, 14, (30, 5), 21, (31, 0),
+            15, 18, 7, (30, 0), 16, (30, 5), 17, 9, (30, 5), 25, (30, 5), 11, (31, 1), 9, 19, (30, 7), 14, (30, 0), 10, (31, 2),
+            10, (31, 0), 15, 9, (30, 5), 25, (31, 2), 9, 6, 14, (30, 5), 21, (31, 0), 15, 18, 8, (30, 0), 16, (30, 5), 17, 9,
+            (30, 5), 25, (30, 5), 11, (31, 1), 9, 19, 19
         ]
+        expected_id_entries = [(0, 'x'), (1, 'miniloc'), (2, 'a'), (3, 'low'), (4, 'high'), (5, 'i'), (6, 'k'), (7, 'sort'), (8, 't'), (9, 'minloc'), (10, 'I'), (11, 'main')]
+        expected_num_entries = [(0, '10'), (1, '1'), (2, '0')]
+
         f = open('scanner/test1.txt', 'r')
-        token_seq = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        token_seq, ids_table, nums_table = main.recognize_tokens(f)
+        ids_entries = ids_table.get_entries()
+        nums_entries = nums_table.get_entries()
         f.close()
-        self.assertListEqual(token_seq, expected_token_seq_1, "The token sequence does not equal the expected.")
+        self.assertListEqual(token_seq, expected_token_seq_1, 'The token sequence does not equal the expected.')
+        self.assertListEqual(ids_entries, expected_id_entries, 'Id entries does not equal the expected.')
+        self.assertListEqual(nums_entries, expected_num_entries, 'Num entries does not equal the expected.')
 
     def test_outputs_bad_pseudotoken_msg(self):
         """Test that the scanner detects a bad pseudotoken and outputs the correct message.
@@ -36,7 +39,7 @@ class TestScanner(unittest.TestCase):
 
         expected_output = 'BadPseudoToken: Identifier or reserved word badly constructed.\n\tAt scanner/tests/text_files/test_bad_pseudotoken.txt:1'
         f = open('scanner/tests/text_files/test_bad_pseudotoken.txt', 'r')
-        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        output = main.recognize_tokens(f)
         f.close()
         self.assertEqual(output, expected_output)
 
@@ -46,7 +49,7 @@ class TestScanner(unittest.TestCase):
 
         expected_output = 'BadNumber: Number literal badly constructed.\n\tAt scanner/tests/text_files/test_bad_number.txt:1'
         f = open('scanner/tests/text_files/test_bad_number.txt', 'r')
-        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        output = main.recognize_tokens(f)
         f.close()
         self.assertEqual(output, expected_output)
 
@@ -56,7 +59,7 @@ class TestScanner(unittest.TestCase):
 
         expected_output = 'UnexpectedChar: Unexpected "!" encountered.\n\tAt scanner/tests/text_files/test_bad_!.txt:1'
         f = open('scanner/tests/text_files/test_bad_!.txt', 'r')
-        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        output = main.recognize_tokens(f)
         f.close()
         self.assertEqual(output, expected_output)
 
@@ -66,7 +69,7 @@ class TestScanner(unittest.TestCase):
 
         expected_output = 'BadCompoundSymbol: Compound symbol badly constructed.\n\tAt scanner/tests/text_files/test_bad_compound_sym.txt:1'
         f = open('scanner/tests/text_files/test_bad_compound_sym.txt', 'r')
-        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        output = main.recognize_tokens(f)
         f.close()
         self.assertEqual(output, expected_output)
 
@@ -76,7 +79,7 @@ class TestScanner(unittest.TestCase):
 
         expected_output = 'UnexpectedChar: A character that does not belong to the language\'s alphabet was encountered.\n\tAt scanner/tests/text_files/test_rare_sym.txt:1'
         f = open('scanner/tests/text_files/test_rare_sym.txt', 'r')
-        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        output = main.recognize_tokens(f)
         f.close()
         self.assertEqual(output, expected_output)
 
@@ -86,7 +89,7 @@ class TestScanner(unittest.TestCase):
 
         expected_output = 'NonClosingComment: The EOF was reached with a non-closing comment.\n\tAt scanner/tests/text_files/test_non_closing_comment.txt:2'
         f = open('scanner/tests/text_files/test_non_closing_comment.txt', 'r')
-        output = main.recognize_tokens(self.id_sym_table, self.num_sym_table, f)
+        output = main.recognize_tokens(f)
         f.close()
         self.assertEqual(output, expected_output)
 
