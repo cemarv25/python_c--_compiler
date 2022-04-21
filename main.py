@@ -6,8 +6,9 @@ if __name__ == '__main__':
 
     if type(output) == tuple:
         token_sequence, ids_table, nums_table = output
+        print(token_sequence)
     else:
-        token_sequence = output
-    print(token_sequence)
+        error_msg = output
+        print(error_msg)
     f.close()
     del f
