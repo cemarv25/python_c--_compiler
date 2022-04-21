@@ -26,8 +26,21 @@ def recognize_tokens(file: TextIOWrapper) -> Tuple[list, SymbolTable, SymbolTabl
 
     # when the current char == '', means we reached the EOF
     while curr_char != '':
-        while not acceptor[curr_state] and not error[curr_state] and curr_char != '':
-            char_idx = get_char_idx(curr_char, char_to_idx)
+        while not acceptor[curr_state] and not error[curr_state]:
+            if curr_char == '':
+                # if token is empty, get out of loop
+                if len(token) == 0:
+                    break
+
+                # if state is comment (8), return non-closing comment error
+                if curr_state == 8:
+                    return f"{error_messages[5]}\n\tAt {file.name}:{comment_line}"
+
+                # if token is not empty, act as if there was a delimiter
+                if len(token) > 0:
+                    char_idx = get_char_idx(' ', char_to_idx)
+            else:
+                char_idx = get_char_idx(curr_char, char_to_idx)
 
             comment_line = update_comment_line(comment_line, curr_line, curr_char, curr_state)
             new_state = transition_table[curr_state][char_idx]
@@ -51,10 +64,6 @@ def recognize_tokens(file: TextIOWrapper) -> Tuple[list, SymbolTable, SymbolTabl
         elif error[curr_state]:
             # send error message
             return f"{error_messages[curr_state - 32]}\n\tAt {file.name}:{curr_line}"
-
-    # check if there is a non-closing comment
-    if curr_state == 8 or curr_state == 9:
-        return f"{error_messages[5]}\n\tAt {file.name}:{comment_line}"
 
     return token_seq, ids_table, nums_table
 

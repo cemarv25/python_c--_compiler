@@ -1,4 +1,3 @@
-from data_structures.symbol_table import SymbolTable
 import unittest
 import main
 
@@ -32,6 +31,17 @@ class TestScanner(unittest.TestCase):
         self.assertListEqual(token_seq, expected_token_seq_1, 'The token sequence does not equal the expected.')
         self.assertListEqual(ids_entries, expected_id_entries, 'Id entries does not equal the expected.')
         self.assertListEqual(nums_entries, expected_num_entries, 'Num entries does not equal the expected.')
+
+    def test_recognize_reserved_words(self):
+        """Test that the scanner detects every reserved word, despite of its capitalization.
+        """
+
+        expected_token_seq = [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3 ]
+
+        f = open('scanner/tests/text_files/test_res_words.txt', 'r')
+        output = main.recognize_tokens(f)
+        f.close()
+        self.assertListEqual(output[0], expected_token_seq)
 
     def test_outputs_bad_pseudotoken_msg(self):
         """Test that the scanner detects a bad pseudotoken and outputs the correct message.
