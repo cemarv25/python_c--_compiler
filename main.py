@@ -1,7 +1,7 @@
 from scanner.main import recognize_tokens
 
 if __name__ == '__main__':
-    f = open('scanner/tests/text_files/test_non_closing_comment.txt', 'r')
+    f = open('scanner/test1.txt', 'r')
     output = recognize_tokens(f)
 
     if type(output) == tuple:
