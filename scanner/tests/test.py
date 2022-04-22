@@ -43,6 +43,17 @@ class TestScanner(unittest.TestCase):
         f.close()
         self.assertListEqual(output[0], expected_token_seq)
 
+    def test_recognize_symbols(self):
+        """Test that the scanner detects every symbol.
+        """
+
+        expected_token_seq = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]
+
+        f = open('scanner/tests/text_files/test_symbols.txt', 'r')
+        output = main.recognize_tokens(f)
+        f.close()
+        self.assertListEqual(output[0], expected_token_seq)
+
     def test_outputs_bad_pseudotoken_msg(self):
         """Test that the scanner detects a bad pseudotoken and outputs the correct message.
         """
