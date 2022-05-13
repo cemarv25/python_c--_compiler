@@ -122,7 +122,7 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
     if state == 10:
         # reserved words
         if token.casefold() in reserved_words:
-            token_seq.append(reserved_words.index(token.casefold()) + 1)
+            token_seq.append(reserved_words.index(token.casefold()) + 31)
 
         # identifiers
         # In this case, check if the identifier is already in the symbol table
@@ -131,9 +131,9 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
 
             if not entry:
                 token_id = ids_table.insert_entry(token)
-                token_seq.append((30, token_id))
+                token_seq.append((10, token_id))
             else:
-                token_seq.append((30, entry[0]))
+                token_seq.append((10, entry[0]))
     
     # numbers
     # Check if the number is already in the symbol table
@@ -142,10 +142,10 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
 
         if not entry:
             token_id = nums_table.insert_entry(token)
-            token_seq.append((31, token_id))
+            token_seq.append((11, token_id))
         else:
-            token_seq.append((31, entry[0]))
+            token_seq.append((11, entry[0]))
 
     # special symbols
     elif state in range(12, 31):
-        token_seq.append(state - 3)
+        token_seq.append(state)
