@@ -1,4 +1,5 @@
 from scanner.main import recognize_tokens
+from parser.main import main
 
 if __name__ == '__main__':
     f = open('scanner/test1.txt', 'r')
@@ -13,6 +14,8 @@ if __name__ == '__main__':
 
         for entry in nums_table.entries:
             print(entry[0], entry[1].content)
+
+        main(token_sequence, ids_table, nums_table)
     else:
         error_msg = output
         print(error_msg)
