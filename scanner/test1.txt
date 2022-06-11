@@ -1,1 +1,6 @@
-5 + 19 * (13 - 10)
+int x;
+int y;
+
+void sum(int x, int y) {
+    int result;
+}
