@@ -9,11 +9,15 @@ if __name__ == '__main__':
         token_sequence, ids_table, nums_table = output
         print(token_sequence)
         
+        print('----- IDs -----\n')
         for entry in ids_table.entries:
             print(entry[0], entry[1].content)
+        print('\n')
 
+        print('----- NUMs -----\n')
         for entry in nums_table.entries:
             print(entry[0], entry[1].content)
+        print('\n')
 
         parse(token_sequence, ids_table, nums_table)
     else:

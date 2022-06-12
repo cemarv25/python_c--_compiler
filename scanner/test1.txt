@@ -1,6 +1,4 @@
-int x;
-int y;
+/* A program to perform selection sort on a
+10 element array */
 
-void sum(int x, int y) {
-    int result;
-}
+y = 10;
