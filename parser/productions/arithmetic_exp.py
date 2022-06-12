@@ -1,72 +1,99 @@
+from parser.main import match, call_prime
 
 current_token = None
 token_sequence = None
 
-def match(terminal: int):
-    global current_token, token_sequence
-    if current_token == terminal:
-        temp_token = token_sequence.pop()
-        if type(temp_token) == tuple:
-            current_token = temp_token[0]
-        else:
-            current_token = temp_token
+def factor_prime(current_token):
+    if current_token == 19:
+        match(19)
+        arithmetic_expression(current_token)
+        match(20)
+    elif current_token == 17:
+        match(17)
+        call_prime()
+
+    # *, /, +, -, <=, <, >, >=, ==, !=, ), ;, ], ,
+    elif current_token == 16 or current_token == 30 or current_token == 14 or current_token == 15 or current_token == 25 or current_token == 24 or current_token == 26 or current_token == 27 or current_token == 29 or current_token == 23 or current_token == 18 or current_token == 12 or current_token == 20 or current_token == 13:
+        return
     else:
         raise Exception('Error')
 
-def factor():
-    global current_token
+def factor(current_token):
     if current_token == 17: # (
         match(17)
-        exp()
+        arithmetic_expression(current_token)
         match(18)
-    elif current_token == 11: # number
+    elif current_token == 10: # ID
+        match(10)
+        factor_prime(current_token)
+    elif current_token == 11: # NUM
         match(11)
     else:
         raise Exception('Error')
 
-def termPrime():
-    global current_token
+def term_prime(current_token):
     if current_token == 16: # *
         match(16)
-        factor()
-        termPrime()
+        factor(current_token)
+        term_prime(current_token)
     elif current_token == 30: # /
         match(30)
-        factor()
-        termPrime()
+        factor(current_token)
+        term_prime(current_token)
 
-    # $, ), +, -
-    elif current_token == '$' or current_token == 18 or current_token == 14 or current_token == 15:
+    # +, -, <=, <, >, >=, ==, !=, ), ;, ], ,
+    elif current_token == 14 or current_token == 15 or current_token == 25 or current_token == 24 or current_token == 26 or current_token == 27 or current_token == 29 or current_token == 23 or current_token == 18 or current_token == 12 or current_token == 20 or current_token == 13:
         return
     else:
         raise Exception('Error')
 
-def term():
-    factor()
-    termPrime()
+def term(current_token):
+    if current_token == 17: # (
+        match(17)
+        arithmetic_expression(current_token)
+        match(18)
+        term_prime(current_token)
+    elif current_token == 10: # ID
+        match(10)
+        factor_prime(current_token)
+        term_prime(current_token)
+    elif current_token == 11: # NUM
+        match(11)
+        term_prime(current_token)
+    else:
+        raise Exception('Error')
 
-def expPrime():
-    global current_token
+def arithmetic_expression_prime(current_token):
     if current_token == 14: # +
         match(14)
-        term()
-        expPrime()
+        term(current_token)
+        arithmetic_expression_prime(current_token)
     elif current_token == 15: # -
         match(15)
-        term()
-        expPrime()
-    elif current_token == '$' or current_token == 18: # $, )
+        term(current_token)
+        arithmetic_expression_prime(current_token)
+
+    # <=, <, >, >=, ==, !=, ), ;, ], ,
+    elif current_token == 25 or current_token == 24 or current_token == 26 or current_token == 27 or current_token == 29 or current_token == 23 or current_token == 18 or current_token == 12 or current_token == 20 or current_token == 13:
         return
     else:
         raise Exception('Error')
 
-def exp():
-    term()
-    expPrime()
-
-def start(curr_token, token_seq, ids_table, nums_table):
-    global token_sequence, current_token
-    token_sequence = token_seq
-    current_token = curr_token
-    exp()
-    return current_token
+def arithmetic_expression(current_token):
+    if current_token == 17: # (
+        match(17)
+        arithmetic_expression(current_token)
+        match(18)
+        term_prime(current_token)
+        arithmetic_expression_prime(current_token)
+    elif current_token == 10: # ID
+        match(10)
+        factor_prime(current_token)
+        term_prime(current_token)
+        arithmetic_expression_prime(current_token)
+    elif current_token == 11: # NUM
+        match(11)
+        term_prime(current_token)
+        arithmetic_expression_prime(current_token)
+    else:
+        raise Exception('Error')
