@@ -1,4 +1,12 @@
 /* A program to perform selection sort on a
 10 element array */
 
-int sum;
+int sum(void){
+    int x;
+    x = 10;
+
+    if (x > 5) {
+        x = 5;
+        input x
+    }
+}

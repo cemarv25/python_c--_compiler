@@ -19,7 +19,7 @@ def expression():
         arithmetic_expression_prime()
         expression_prime()
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid expression. Expected an identifier, number or '(' but got {parser.token_content}.\n\tAt line {parser.token_line}.")
 
 def expression_prime():
     if parser.current_token == 25: # <=

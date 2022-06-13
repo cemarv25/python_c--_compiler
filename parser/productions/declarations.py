@@ -75,13 +75,3 @@ def local_declarations():
         return
     else:
         raise parser.SyntaxException(f"SyntaxException: Invalid function body, expected a variable declaration or a statement but got '{parser.token_content}'.\n\tAt line {parser.token_line}")
-
-def args_list_prime():
-    if parser.current_token == 13: # ,
-        parser.match(13)
-        expressions.arithmetic_expression()
-        args_list_prime()
-    elif parser.current_token == 18: # )
-        return
-    else:
-        raise Exception('Error')

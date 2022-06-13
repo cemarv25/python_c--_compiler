@@ -9,7 +9,7 @@ ids_table = None
 nums_table = None
 
 id_to_token = {
-    0: '$',
+    0: 'EOF',
     10: 'identifier', 11: 'number literal',
     12: ';', 13: ',', 14: '+', 15: '-', 16: '*', 17: '(', 18: ')', 19: '[', 20: ']', 21: '{',
     22: '}', 23: '!=', 24: '<', 25: '<=', 26: '>', 27: '>=', 28: '=', 29: '==', 30: '/',
@@ -51,9 +51,10 @@ def match(terminal: int) -> int:
             token_content = entry.content
         else:
             token_content = id_to_token[temp_token[0]]
-
+            
             if current_token != 0:
                 token_line = temp_token[1]
+            
 
         return current_token
     else:

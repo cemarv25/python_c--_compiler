@@ -8,7 +8,7 @@ def compound_stmt():
         declarations.local_declarations()
         statement_list()
         parser.match(22)
-    else: raise Exception('Error')
+    else: raise parser.SyntaxException(f"SyntaxException: Invalid function body. Expected '{{', but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def statement_list():
     if parser.current_token == 10: # ID
@@ -53,6 +53,9 @@ def statement_list():
         statement_list()
     elif parser.current_token == 22: # }
         return
+    
+    else:
+        raise parser.SyntaxException(f"SyntaxException: Invalid statement. Expected a statement but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def statement():
     if parser.current_token == 10: # ID
@@ -89,7 +92,7 @@ def statement():
         expressions.expression()
         parser.match(12)
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid statement. Expected a statement but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def statement_prime():
     if parser.current_token == 19: # [
@@ -108,16 +111,18 @@ def statement_prime():
         call_prime()
         parser.match(12)
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Incomplete statement. Expected '[', '=' or '(' but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def selection_stmt_prime():
     if parser.current_token == 31: # else
         parser.match(31)
         statement()
+
+    # ID, {, if, while, return, input, output, else, }
     elif parser.current_token == 10 or parser.current_token == 21 or parser.current_token == 32 or parser.current_token == 36 or parser.current_token == 34 or parser.current_token == 37 or parser.current_token == 38 or parser.current_token == 31 or parser.current_token == 22:
         return
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid if statement. Expected 'else', an identifier, '}}', or a statement but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def return_stmt_prime():
     if parser.current_token == 12: # ;
@@ -144,7 +149,7 @@ def return_stmt_prime():
         expressions.expression_prime()
         parser.match(12)
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid return statement. Expected ';' or an expression but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def var_prime():
     if parser.current_token == 19: # [
@@ -165,20 +170,30 @@ def call_prime():
         parser.match(18)
         expressions.term_prime()
         expressions.arithmetic_expression_prime()
-        expressions.args_list_prime()
+        args_list_prime()
         parser.match(18)
     elif parser.current_token == 10: # ID
         parser.match(10)
         expressions.factor_prime()
         expressions.term_prime()
         expressions.arithmetic_expression_prime()
-        declarations.args_list_prime()
+        args_list_prime()
         parser.match(18)
     elif parser.current_token == 11: # NUM
         parser.match(11)
         expressions.term_prime()
         expressions.arithmetic_expression_prime()
-        declarations.args_list_prime()
+        args_list_prime()
         parser.match(18)
+    else:
+        raise Exception('Error')
+
+def args_list_prime():
+    if parser.current_token == 13: # ,
+        parser.match(13)
+        expressions.arithmetic_expression()
+        args_list_prime()
+    elif parser.current_token == 18: # )
+        return
     else:
         raise Exception('Error')
