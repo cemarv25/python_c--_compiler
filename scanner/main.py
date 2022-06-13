@@ -58,7 +58,7 @@ def recognize_tokens(file: TextIOWrapper) -> Tuple[list, SymbolTable, SymbolTabl
             curr_state = new_state
         
         if acceptor[curr_state]:
-            record_token(curr_state, token, token_seq, ids_table, nums_table)
+            record_token(curr_state, token, token_seq, curr_line, ids_table, nums_table)
             token = ''
             curr_state = 0
         elif error[curr_state]:
@@ -106,13 +106,14 @@ def update_comment_line(comment_line: int, char_line: int, char: str, state: int
     return comment_line
 
 
-def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable, nums_table: SymbolTable) -> None:
+def record_token(state: int, token: str, token_seq: list, curr_line: int, ids_table: SymbolTable, nums_table: SymbolTable) -> None:
     """Record a token into the sequence of tokens and its SymbolTable if needed.
 
     Args:
         state (int): The current state
         token (str): The token to record
         token_seq (list): The token sequence
+        curr_line (int): The line that the token is in
         ids_table (SymbolTable): The identifiers SymbolTable
         nums_table (SymbolTable): The numbers SymbolTable
     """
@@ -122,7 +123,7 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
     if state == 10:
         # reserved words
         if token.casefold() in reserved_words:
-            token_seq.append(reserved_words.index(token.casefold()) + 31)
+            token_seq.append((reserved_words.index(token.casefold()) + 31, curr_line))
 
         # identifiers
         # In this case, check if the identifier is already in the symbol table
@@ -130,7 +131,7 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
             entry = ids_table.get_entry_with_token(token)
 
             if not entry:
-                token_id = ids_table.insert_entry(token)
+                token_id = ids_table.insert_entry(token, curr_line)
                 token_seq.append((10, token_id))
             else:
                 token_seq.append((10, entry[0]))
@@ -141,11 +142,11 @@ def record_token(state: int, token: str, token_seq: list, ids_table: SymbolTable
         entry = nums_table.get_entry_with_token(token)
 
         if not entry:
-            token_id = nums_table.insert_entry(token)
+            token_id = nums_table.insert_entry(token, curr_line)
             token_seq.append((11, token_id))
         else:
             token_seq.append((11, entry[0]))
 
     # special symbols
     elif state in range(12, 31):
-        token_seq.append(state)
+        token_seq.append((state, curr_line))

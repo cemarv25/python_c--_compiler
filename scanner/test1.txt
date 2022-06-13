@@ -1,4 +1,4 @@
 /* A program to perform selection sort on a
 10 element array */
 
-y = 10;
+int sum;

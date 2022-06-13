@@ -16,15 +16,16 @@ class SymbolTable:
         self.entries = []
         self.id_gen = self.initialize_id_gen()
 
-    def insert_entry(self, entry_content: str) -> int:
+    def insert_entry(self, entry_content: str, entry_line: int) -> int:
         """Inserts an entry to the entry list of the table.
 
         Args:
             entry_content (str): The entry's content.
+            entry_line (int): The entry's line.
         Returns:
             entry_id: The new entry's id.
         """
-        entry = Entry(entry_content)
+        entry = Entry(entry_content, entry_line)
         entry_id = self.id_gen.next()
         self.entries.append((entry_id, entry))
         return entry_id
@@ -45,6 +46,22 @@ class SymbolTable:
         
         return False
 
+    def get_entry_with_id(self, id: int) -> Entry | None:
+        """Get an entry with its id if it exists. Otherwise return None.
+
+        Args:
+            id (int): The entry's id
+
+        Returns:
+            Entry | None: The entry if found, None if not found.
+        """
+
+        for entry_id, entry in self.entries:
+            if entry_id == id:
+                return entry
+
+        return None
+
     def get_entry_with_token(self, token: str) -> tuple | None:
         """Gen an entry with the token if exists. Otherwise return None.
 
@@ -60,7 +77,6 @@ class SymbolTable:
                 return (entry_id, entry)
         
         return None
-
 
     def initialize_id_gen(self) -> IdGenerator:
         """Initializes the Symbol Table's id generator.
