@@ -12,3 +12,16 @@ class Entry:
 
         self.content = content
         self.line = line
+
+    def create_info_dict(self) -> None:
+        """Method to create the entry's info dictionary.
+        """
+
+        self.info = {
+            'isVar': False,
+            'isFun': False,
+            'global': False,
+            'local': False,
+            'arg_num': None,
+            'return_type': None
+        }

@@ -7,12 +7,12 @@ def program() -> None:
 
     if parser.current_token == 33: # int
         parser.match(33)
-        parser.match(10)
+        parser.match(10, { 'global': True })
         declarations.declaration_prime()
         program()
     elif parser.current_token == 35: # void
         parser.match(35)
-        parser.match(10)
+        parser.match(10, { 'global': True, 'return_type': 'void' })
         parser.match(17)
         declarations.params()
         parser.match(18)

@@ -1,6 +1,5 @@
 import parser.main as parser
 import parser.productions.statements as statements
-import parser.productions.expressions as expressions
 
 def declaration_prime():
     if parser.current_token == 12: # ;

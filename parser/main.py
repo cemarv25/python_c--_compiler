@@ -5,6 +5,7 @@ current_token = None
 token_sequence = None
 token_line = None
 token_content = None
+current_entry = None
 ids_table = None
 nums_table = None
 
@@ -18,15 +19,50 @@ id_to_token = {
 }
 
 class SyntaxException(Exception):
+    """The Exception that will be raised in this stage of the compiler.
+    """
+
     def __init__(self, msg: str):
+        """SyntaxException constructor.
+
+        Args:
+            msg (str): The error message.
+        """
+
         self.message = msg
 
+def update_current_entry(property: str, value: str | int) -> None:
+    """Update the current entry's info.
 
-def match(terminal: int) -> int:
+    Args:
+        property (str): The property to be updated.
+        value (str | int): The value to be updated with.
+    """
+
+    global current_entry
+
+    current_entry.info[property] = value
+
+def verify_main_fun():
+    """Function used to verify that the program being analized contains the main function declaration.
+
+    Raises:
+        SyntaxException in case that the program does not contain a main function declaration.
+    """
+
+    global ids_table
+
+    entry = ids_table.get_entry_with_token('main')
+
+    if not entry or entry[1].info['global'] != True or entry[1].info['return_type'] != 'void':
+        raise SyntaxException('SyntaxException: NoMain. Expected a function declaration with the form \'void main(void)\' but it was not found.')
+
+def match(terminal: int, updates: dict = None) -> int:
     """Match function to compare current token to the expected terminal symbol.
 
     Args:
         terminal (int): The expected terminal symbol
+        updates (dict, optional): The Entry's properties and values to update
 
     Raises:
         SyntaxException when the current token and the expected terminal are not the same.
@@ -35,21 +71,27 @@ def match(terminal: int) -> int:
         int: The resulting current token
     """
 
-    global current_token, token_sequence, token_line, token_content
+    global current_token, token_sequence, token_line, token_content, current_entry
+    
     if current_token == terminal:
+        if updates:
+            for key, value in updates.items():
+                update_current_entry(key, value)
+
         temp_token = token_sequence.pop()
         current_token = temp_token[0]
 
         # if the token is an id or a num, get its line from the entry
         if current_token == 10:
-            entry = ids_table.get_entry_with_id(temp_token[1])
-            token_line = entry.line
-            token_content = entry.content
+            current_entry = ids_table.get_entry_with_id(temp_token[1])
+            token_line = current_entry.line
+            token_content = current_entry.content
         elif current_token == 11:
-            entry = nums_table.get_entry_with_id(temp_token[1])
-            token_line = entry.line
-            token_content = entry.content
+            current_entry = nums_table.get_entry_with_id(temp_token[1])
+            token_line = current_entry.line
+            token_content = current_entry.content
         else:
+            current_entry = None
             token_content = id_to_token[temp_token[0]]
             
             if current_token != 0:
@@ -95,6 +137,7 @@ def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
 
     try:
         program()
+        verify_main_fun()
 
         if current_token == 0:
             print('Syntax analysis ok')

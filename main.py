@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     if type(output) == tuple:
         token_sequence, ids_table, nums_table = output
-        print(token_sequence)
+        # print(token_sequence)
         
         print('----- IDs -----\n')
         for entry in ids_table.entries:
