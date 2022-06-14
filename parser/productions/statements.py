@@ -159,7 +159,7 @@ def var_prime():
     elif parser.current_token == 12: # ;
         return
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid input statement. Expected '[' or ';' but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def call_prime():
     if parser.current_token == 18: # )
@@ -186,7 +186,7 @@ def call_prime():
         args_list_prime()
         parser.match(18)
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid function call. Expected an expression or ')' but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")
 
 def args_list_prime():
     if parser.current_token == 13: # ,
@@ -196,4 +196,4 @@ def args_list_prime():
     elif parser.current_token == 18: # )
         return
     else:
-        raise Exception('Error')
+        raise parser.SyntaxException(f"SyntaxException: Invalid function parameters. Expected ',' or ')' but got '{parser.token_content}'.\n\tAt line {parser.token_line}.")

@@ -100,5 +100,6 @@ def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
             print('Syntax analysis ok')
     except SyntaxException as err:
         print(err.message)
-    except Exception:
+    except Exception as err:
         print('syntax analysis error')
+        print(err)
