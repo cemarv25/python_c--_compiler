@@ -72,15 +72,6 @@ def verify_main_fun():
 
     if not last_dec or last_dec.content.casefold() != 'main' or last_dec.info['return_type'] != 'void':
         raise SyntaxException('SyntaxException: NoMain. Expected the last declaration to be a function declaration with the form \'void main(void)\' but it was not.')
-    
-    # entry = ids_table.get_entry_with_token('main')
-
-    # # Check if there is a upcase 'MAIN' function
-    # if not entry:
-    #     entry = ids_table.get_entry_with_token('MAIN')
-
-    # if not entry or entry[1].info['global'] != True or entry[1].info['return_type'] != 'void':
-    #     raise SyntaxException('SyntaxException: NoMain. Expected a function declaration with the form \'void main(void)\' but it was not found.')
 
 def match(terminal: int, updates: dict = None) -> int:
     """Match function to compare current token to the expected terminal symbol.
@@ -99,31 +90,36 @@ def match(terminal: int, updates: dict = None) -> int:
     global current_token_id, token, token_sequence, token_line, token_content, current_entry
     
     if current_token_id == terminal:
+        next_token = token_sequence.pop()
+
         if current_token_id != 0:
             token_line = token[-1]
 
         if updates:
             for key, value in updates.items():
-                update_current_entry(key, value)
+                if key == 'global_line' or key == 'local_line':
+                    update_current_entry(key, token_line)
+                else:
+                    update_current_entry(key, value)
 
-        token = token_sequence.pop()
-        current_token_id = token[0]
+        current_token_id = next_token[0]
 
-        # if the token is an id or a num, get its line from the entry
+        # if the next token is an id or a num, get its line from the entry
         if current_token_id == 10:
-            current_entry = ids_table.get_entry_with_id(token[1])
+            current_entry = ids_table.get_entry_with_id(next_token[1])
             token_content = current_entry.content
         elif current_token_id == 11:
-            current_entry = nums_table.get_entry_with_id(token[1])
+            current_entry = nums_table.get_entry_with_id(next_token[1])
             token_content = current_entry.content
         else:
-            token_content = id_to_token[token[0]]
+            token_content = id_to_token[next_token[0]]
             
+        token = next_token
             
 
         return current_token_id
     else:
-        raise SyntaxException(f"SyntaxException: Expected {id_to_token[terminal]} but got '{token_content}'\n\tAt line {token_line}")
+        raise SyntaxException(f"SyntaxException: Expected '{id_to_token[terminal]}' but got '{token_content}'\n\tAt line {token_line}")
 
 def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
     """The starting point of the parser
@@ -155,14 +151,8 @@ def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
     else:
         token_content = id_to_token[token[0]]
 
-    try:
-        program()
-        verify_main_fun()
+    program()
+    verify_main_fun()
 
-        if current_token_id == 0:
-            print('Syntax analysis ok')
-    except SyntaxException as err:
-        print(err.message)
-    except Exception as err:
-        print('syntax analysis error')
-        print(err)
+    if current_token_id == 0:
+        print('Syntax analysis ok')
