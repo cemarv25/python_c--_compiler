@@ -12,7 +12,7 @@ def program() -> None:
         program()
     elif parser.current_token == 35: # void
         parser.match(35)
-        parser.match(10, { 'global': True, 'return_type': 'void' })
+        parser.match(10, { 'isFun': True, 'global': True, 'return_type': 'void' })
         parser.match(17)
         declarations.params()
         parser.match(18)

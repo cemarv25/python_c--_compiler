@@ -8,7 +8,7 @@ if __name__ == '__main__':
     if type(output) == tuple:
         token_sequence, ids_table, nums_table = output
         # print(token_sequence)
-        
+        print('----- BEFORE PARSING -----\n')
         print('----- IDs -----\n')
         for entry in ids_table.entries:
             print(entry[0], entry[1].content)
@@ -20,6 +20,16 @@ if __name__ == '__main__':
         print('\n')
 
         parse(token_sequence, ids_table, nums_table)
+        print('\n----- AFTER PARSING -----\n')
+        print('----- IDs -----\n')
+        for entry in ids_table.entries:
+            print(f"{entry[0]}\t{entry[1].content}\t{entry[1].info}")
+        print('\n')
+
+        print('----- NUMs -----\n')
+        for entry in nums_table.entries:
+            print(entry[0], entry[1].content)
+        print('\n')
     else:
         error_msg = output
         print(error_msg)

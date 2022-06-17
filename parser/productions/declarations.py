@@ -3,14 +3,14 @@ import parser.productions.statements as statements
 
 def declaration_prime():
     if parser.current_token == 12: # ;
-        parser.match(12)
+        parser.match(12, { 'isVar': True })
     elif parser.current_token == 19: # [
-        parser.match(19)
+        parser.match(19, { 'isVar': True })
         parser.match(11)
         parser.match(20)
         parser.match(12)
     elif parser.current_token == 17: # (
-        parser.match(17)
+        parser.match(17, { 'isFun': True, 'return_type': 'int' })
         params()
         parser.match(18)
         statements.compound_stmt()
@@ -31,7 +31,7 @@ def var_declaration_prime():
 def params():
     if parser.current_token == 33: # int
         parser.match(33)
-        parser.match(10)
+        parser.match(10, { 'isVar': True, 'local': True })
         param_prime()
         param_list_prime()
     elif parser.current_token == 35: # void
@@ -43,7 +43,7 @@ def param_list_prime():
     if parser.current_token == 13: # ,
         parser.match(13)
         parser.match(33)
-        parser.match(10)
+        parser.match(10, { 'isVar': True, 'local': True })
         param_prime()
         param_list_prime()
     elif parser.current_token == 18: # )
@@ -65,7 +65,7 @@ def param_prime():
 def local_declarations():
     if parser.current_token == 33: # int
         parser.match(33)
-        parser.match(10) 
+        parser.match(10, { 'isVar': True, 'local': True }) 
         var_declaration_prime()
         local_declarations()
 

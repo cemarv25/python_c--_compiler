@@ -54,6 +54,10 @@ def verify_main_fun():
 
     entry = ids_table.get_entry_with_token('main')
 
+    # Check if there is a upcase 'MAIN' function
+    if not entry:
+        entry = ids_table.get_entry_with_token('MAIN')
+
     if not entry or entry[1].info['global'] != True or entry[1].info['return_type'] != 'void':
         raise SyntaxException('SyntaxException: NoMain. Expected a function declaration with the form \'void main(void)\' but it was not found.')
 
@@ -91,7 +95,6 @@ def match(terminal: int, updates: dict = None) -> int:
             token_line = current_entry.line
             token_content = current_entry.content
         else:
-            current_entry = None
             token_content = id_to_token[temp_token[0]]
             
             if current_token != 0:
