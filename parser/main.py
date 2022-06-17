@@ -1,17 +1,24 @@
 from data_structures.symbol_table import SymbolTable
 from parser.productions.program import program
 
+# The token tuple as it came from the token sequence
 token = None
+
+# Info about the current entry
 current_token_id = None
-token_sequence = None
 token_line = None
 token_content = None
 current_entry = None
+
+# Info to be used when declaring a function
 fun_entry = None
 args_num = 0
+
+token_sequence = None
 ids_table = None
 nums_table = None
 
+# Dictionary to get the token corresponding to a given token id
 id_to_token = {
     0: 'EOF',
     10: 'identifier', 11: 'number literal',
@@ -54,7 +61,7 @@ def update_current_entry(property: str, value: str | int) -> None:
         else:
             args_num += 1
 
-    if property == 'global_line' or property == 'local_line':
+    if property == 'global_line':
         current_entry.info[property] = token_line
     else:
         current_entry.info[property] = value
@@ -70,7 +77,7 @@ def verify_main_fun():
 
     # Get the last entry with a global scope from the ids table
     last_dec = None
-    for entry_id, entry in ids_table.entries:
+    for _, entry in ids_table.entries:
         # If the entry is not global, continue to the next one
         if entry.info['global'] == False:
             continue
@@ -85,6 +92,7 @@ def verify_main_fun():
         if entry.info['global_line'] > last_dec.info['global_line']:
             last_dec = entry
 
+    # If the last declaraion's content is not main, or its return type is not void, raise SyntaxException
     if not last_dec or last_dec.content.casefold() != 'main' or last_dec.info['return_type'] != 'void':
         raise SyntaxException('SyntaxException: NoMain. Expected the last declaration to be a function declaration with the form \'void main(void)\' but it was not.')
 
