@@ -23,16 +23,15 @@ class SymbolTable:
         self.entries = []
         self.id_gen = self.initialize_id_gen()
 
-    def insert_entry(self, entry_content: str, entry_line: int) -> int:
+    def insert_entry(self, entry_content: str) -> int:
         """Inserts an entry to the entry list of the table. If the SymbolTable's name is 'identifiers', it will create the entry's info dictionary.
 
         Args:
             entry_content (str): The entry's content.
-            entry_line (int): The entry's line.
         Returns:
             entry_id: The new entry's id.
         """
-        entry = Entry(entry_content, entry_line)
+        entry = Entry(entry_content)
         if self.name == 'identifiers':
             entry.create_info_dict()
 
@@ -96,12 +95,3 @@ class SymbolTable:
         """
 
         return IdGenerator()
-
-    def get_entries(self) -> list:
-        """Return the entries in the format (entry#, entry.content).
-
-        Returns:
-            list: The list of tuples of the entries
-        """
-
-        return [(entry_id, entry.content) for entry_id, entry in self.entries]

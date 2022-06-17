@@ -131,10 +131,10 @@ def record_token(state: int, token: str, token_seq: list, curr_line: int, ids_ta
             entry = ids_table.get_entry_with_token(token)
 
             if not entry:
-                token_id = ids_table.insert_entry(token, curr_line)
-                token_seq.append((10, token_id))
+                token_id = ids_table.insert_entry(token)
+                token_seq.append((10, token_id, curr_line))
             else:
-                token_seq.append((10, entry[0]))
+                token_seq.append((10, entry[0], curr_line))
     
     # numbers
     # Check if the number is already in the symbol table
@@ -142,7 +142,7 @@ def record_token(state: int, token: str, token_seq: list, curr_line: int, ids_ta
         entry = nums_table.get_entry_with_token(token)
 
         if not entry:
-            token_id = nums_table.insert_entry(token, curr_line)
+            token_id = nums_table.insert_entry(token)
             token_seq.append((11, token_id))
         else:
             token_seq.append((11, entry[0]))

@@ -1,7 +1,8 @@
 from data_structures.symbol_table import SymbolTable
 from parser.productions.program import program
 
-current_token = None
+token = None
+current_token_id = None
 token_sequence = None
 token_line = None
 token_content = None
@@ -52,14 +53,34 @@ def verify_main_fun():
 
     global ids_table
 
-    entry = ids_table.get_entry_with_token('main')
+    # Get the last entry with a global scope from the ids table
+    last_dec = None
+    for entry_id, entry in ids_table.entries:
+        # If the entry is not global, continue to the next one
+        if entry.info['global'] == False:
+            continue
 
-    # Check if there is a upcase 'MAIN' function
-    if not entry:
-        entry = ids_table.get_entry_with_token('MAIN')
+        # If the last declaration is not defined, get the current one and continue
+        if not last_dec:
+            last_dec = entry
+            continue
 
-    if not entry or entry[1].info['global'] != True or entry[1].info['return_type'] != 'void':
-        raise SyntaxException('SyntaxException: NoMain. Expected a function declaration with the form \'void main(void)\' but it was not found.')
+        # If the current entry's line is greater than the one in last_dec,
+        # assign last_dec equal to the current entry
+        if entry.info['global_line'] > last_dec.info['global_line']:
+            last_dec = entry
+
+    if not last_dec or last_dec.content.casefold() != 'main' or last_dec.info['return_type'] != 'void':
+        raise SyntaxException('SyntaxException: NoMain. Expected the last declaration to be a function declaration with the form \'void main(void)\' but it was not.')
+    
+    # entry = ids_table.get_entry_with_token('main')
+
+    # # Check if there is a upcase 'MAIN' function
+    # if not entry:
+    #     entry = ids_table.get_entry_with_token('MAIN')
+
+    # if not entry or entry[1].info['global'] != True or entry[1].info['return_type'] != 'void':
+    #     raise SyntaxException('SyntaxException: NoMain. Expected a function declaration with the form \'void main(void)\' but it was not found.')
 
 def match(terminal: int, updates: dict = None) -> int:
     """Match function to compare current token to the expected terminal symbol.
@@ -75,33 +96,32 @@ def match(terminal: int, updates: dict = None) -> int:
         int: The resulting current token
     """
 
-    global current_token, token_sequence, token_line, token_content, current_entry
+    global current_token_id, token, token_sequence, token_line, token_content, current_entry
     
-    if current_token == terminal:
+    if current_token_id == terminal:
+        if current_token_id != 0:
+            token_line = token[-1]
+
         if updates:
             for key, value in updates.items():
                 update_current_entry(key, value)
 
-        temp_token = token_sequence.pop()
-        current_token = temp_token[0]
+        token = token_sequence.pop()
+        current_token_id = token[0]
 
         # if the token is an id or a num, get its line from the entry
-        if current_token == 10:
-            current_entry = ids_table.get_entry_with_id(temp_token[1])
-            token_line = current_entry.line
+        if current_token_id == 10:
+            current_entry = ids_table.get_entry_with_id(token[1])
             token_content = current_entry.content
-        elif current_token == 11:
-            current_entry = nums_table.get_entry_with_id(temp_token[1])
-            token_line = current_entry.line
+        elif current_token_id == 11:
+            current_entry = nums_table.get_entry_with_id(token[1])
             token_content = current_entry.content
         else:
-            token_content = id_to_token[temp_token[0]]
+            token_content = id_to_token[token[0]]
             
-            if current_token != 0:
-                token_line = temp_token[1]
             
 
-        return current_token
+        return current_token_id
     else:
         raise SyntaxException(f"SyntaxException: Expected {id_to_token[terminal]} but got '{token_content}'\n\tAt line {token_line}")
 
@@ -114,7 +134,7 @@ def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
         nums_t (SymbolTable): The symbol table for the numbers
     """
 
-    global current_token, token_sequence, token_line, token_content, ids_table, nums_table
+    global current_token_id, token, token_sequence, token_line, token_content, ids_table, nums_table
 
     ids_table = ids_t
     nums_table = nums_t
@@ -122,27 +142,24 @@ def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
     token_seq.append((0, -1))
     token_seq.reverse()
     token_sequence = token_seq
-    temp_token = token_sequence.pop()
-    current_token = temp_token[0]
+    token = token_sequence.pop()
+    current_token_id = token[0]
 
     # if the token is an id or a num, get its line from the entry
-    if current_token == 10:
-        entry = ids_table.get_entry_with_id(temp_token[1])
-        token_line = entry.line
+    if current_token_id == 10:
+        entry = ids_table.get_entry_with_id(token[1])
         token_content = entry.content
-    elif current_token == 11:
-        entry = nums_table.get_entry_with_id(temp_token[1])
-        token_line = entry.line
+    elif current_token_id == 11:
+        entry = nums_table.get_entry_with_id(token[1])
         token_content = entry.content
     else:
-        token_line = temp_token[1]
-        token_content = id_to_token[temp_token[0]]
+        token_content = id_to_token[token[0]]
 
     try:
         program()
         verify_main_fun()
 
-        if current_token == 0:
+        if current_token_id == 0:
             print('Syntax analysis ok')
     except SyntaxException as err:
         print(err.message)
