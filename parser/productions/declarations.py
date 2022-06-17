@@ -12,7 +12,7 @@ def declaration_prime():
     elif parser.current_token_id == 17: # (
         parser.match(17, { 'isFun': True, 'return_type': 'int' })
         params()
-        parser.match(18)
+        parser.match(18, { 'arg_num': parser.args_num })
         statements.compound_stmt()
     else:
         raise parser.SyntaxException(f"SyntaxException: Unfinished declaration. Expected either ';', '[' or '(' but got '{parser.token_content}'.\n\tAt line {parser.token_line}")
@@ -30,19 +30,19 @@ def var_declaration_prime():
 
 def params():
     if parser.current_token_id == 33: # int
-        parser.match(33)
+        parser.match(33, { 'arg_num': None })
         parser.match(10, { 'isVar': True, 'local': True })
         param_prime()
         param_list_prime()
     elif parser.current_token_id == 35: # void
-        parser.match(35)
+        parser.match(35, { 'arg_num': 0 })
     else:
         raise parser.SyntaxException(f"SyntaxException: Invalid function parameters. Expected either a variable declaration or 'void' but got '{parser.token_content}'.\n\tAt line {parser.token_line}")
 
 def param_list_prime():
     if parser.current_token_id == 13: # ,
         parser.match(13)
-        parser.match(33)
+        parser.match(33, { 'arg_num': None })
         parser.match(10, { 'isVar': True, 'local': True })
         param_prime()
         param_list_prime()

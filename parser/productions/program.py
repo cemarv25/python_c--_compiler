@@ -15,7 +15,7 @@ def program() -> None:
         parser.match(10, { 'isFun': True, 'global': True, 'return_type': 'void', 'global_line': parser.token_line })
         parser.match(17)
         declarations.params()
-        parser.match(18)
+        parser.match(18, { 'arg_num': parser.args_num })
         statements.compound_stmt()
         program()
     elif parser.current_token_id == 0:

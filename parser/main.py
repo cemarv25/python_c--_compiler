@@ -7,6 +7,8 @@ token_sequence = None
 token_line = None
 token_content = None
 current_entry = None
+fun_entry = None
+args_num = 0
 ids_table = None
 nums_table = None
 
@@ -40,9 +42,22 @@ def update_current_entry(property: str, value: str | int) -> None:
         value (str | int): The value to be updated with.
     """
 
-    global current_entry
+    global current_entry, fun_entry, args_num
 
-    current_entry.info[property] = value
+    if property == 'isFun':
+        fun_entry = current_entry
+    
+    if property == 'arg_num':
+        if value != None:
+            fun_entry.info[property] = value
+            args_num = 0
+        else:
+            args_num += 1
+
+    if property == 'global_line' or property == 'local_line':
+        current_entry.info[property] = token_line
+    else:
+        current_entry.info[property] = value
 
 def verify_main_fun():
     """Function used to verify that the program being analized contains the main function declaration.
@@ -97,10 +112,7 @@ def match(terminal: int, updates: dict = None) -> int:
 
         if updates:
             for key, value in updates.items():
-                if key == 'global_line' or key == 'local_line':
-                    update_current_entry(key, token_line)
-                else:
-                    update_current_entry(key, value)
+                update_current_entry(key, value)
 
         current_token_id = next_token[0]
 
