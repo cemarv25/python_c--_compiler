@@ -160,6 +160,7 @@ def parse(token_seq: list, ids_t: SymbolTable, nums_t: SymbolTable):
     token_sequence = token_seq
     token = token_sequence.pop()
     current_token_id = token[0]
+    token_line = token[-1]
 
     # if the token is an id or a num, get its line from the entry
     if current_token_id == 10:
